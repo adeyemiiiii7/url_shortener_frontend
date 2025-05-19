@@ -72,7 +72,7 @@ const UrlShortenerForm = () => {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com/very/long/url/that/needs/shortening"
+              placeholder="https://example.com/very/long/url"
               className="w-full pl-10 pr-12 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-300 text-gray-900 dark:text-gray-100"
               autoFocus
             />
@@ -116,19 +116,20 @@ const UrlShortenerForm = () => {
       </form>
 
       {shortUrl && (
-        <div className="mt-8 p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300">
+        <div className="mt-8 p-4 sm:p-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300">
           <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Your shortened URL</h3>
-          <div className="flex items-center">
+          
+          {/* Mobile-friendly URL and copy button layout */}
+          <div className="flex flex-col sm:flex-row items-stretch">
             <input
               type="text"
               readOnly
               value={api.getFullShortUrl(shortUrl.shortCode)}
-              className="flex-1 p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-l-lg focus:outline-none text-gray-900 dark:text-gray-100"
+              className="flex-1 p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg sm:rounded-l-lg sm:rounded-r-none mb-2 sm:mb-0 focus:outline-none text-gray-900 dark:text-gray-100 overflow-x-auto text-sm"
             />
             <button
               onClick={copyToClipboard}
-              className={`px-4 py-3 rounded-r-lg flex items-center justify-center transition-all duration-300 ${copied ? 'bg-green-500 text-white' : 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200'
-                }`}
+              className={`px-4 py-3 rounded-lg sm:rounded-l-none sm:rounded-r-lg flex items-center justify-center transition-all duration-300 ${copied ? 'bg-green-500 text-white' : 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200'}`}
             >
               {copied ? (
                 <>
@@ -147,17 +148,11 @@ const UrlShortenerForm = () => {
               )}
             </button>
           </div>
+          
           <div className="mt-4 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Original URL:</p>
-            <p className="text-gray-700 dark:text-gray-300 break-all text-sm">{shortUrl.originalUrl}</p>
+            <p className="text-gray-700 dark:text-gray-300 break-all text-sm max-w-full overflow-x-auto">{shortUrl.originalUrl}</p>
           </div>
-          
-          {/* Debug information (can be removed in production) */}
-          {/* <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Debug Info:</p>
-            <p className="text-gray-700 dark:text-gray-300 text-xs">Short code: {shortUrl.shortCode}</p>
-            <p className="text-gray-700 dark:text-gray-300 text-xs">Full URL: {api.getFullShortUrl(shortUrl.shortCode)}</p>
-          </div> */}
         </div>
       )}
     </div>
