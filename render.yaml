@@ -4,7 +4,10 @@ services:
     runtime: static
     buildCommand: npm run build
     staticPublishPath: ./dist
+    # Ensure all routes are handled by the SPA
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    # No need for start command for static sites
+    # Render will serve the static files directly
