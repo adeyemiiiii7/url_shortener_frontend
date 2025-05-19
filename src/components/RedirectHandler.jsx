@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import api from '../services/api';
 
 const RedirectHandler = () => {
@@ -11,8 +11,6 @@ const RedirectHandler = () => {
   useEffect(() => {
     const fetchOriginalUrl = async () => {
       try {
-        // For testing in local development, we'll directly use the API endpoint
-        // In production, users would access the short URL directly from the backend
         console.log(`Fetching redirect for short code: ${shortCode}`);
         
         // Try to get the original URL from the API
@@ -36,6 +34,13 @@ const RedirectHandler = () => {
       fetchOriginalUrl();
     }
   }, [shortCode]);
+
+  // If we have the original URL, redirect to it
+  useEffect(() => {
+    if (originalUrl) {
+      window.location.href = originalUrl;
+    }
+  }, [originalUrl]);
 
   if (loading) {
     return (
@@ -71,24 +76,20 @@ const RedirectHandler = () => {
     );
   }
 
-  // If we have the original URL, redirect to it
-  if (originalUrl) {
-    // Using window.location for a hard redirect
-    window.location.href = originalUrl;
-    
-    // Return a loading state while the redirect happens
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
-        <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
-          <div className="animate-spin mx-auto w-16 h-16 border-4 border-gray-300 dark:border-gray-600 border-t-black dark:border-t-white rounded-full mb-4"></div>
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Redirecting you...</h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">If you are not redirected automatically, click <a href={originalUrl} className="text-blue-600 dark:text-blue-400 hover:underline">here</a>.</p>
-        </div>
+  // Show a loading state while redirect happens
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
+      <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+        <div className="animate-spin mx-auto w-16 h-16 border-4 border-gray-300 dark:border-gray-600 border-t-black dark:border-t-white rounded-full mb-4"></div>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Redirecting you...</h2>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          {originalUrl && (
+            <>If you are not redirected automatically, click <a href={originalUrl} className="text-blue-600 dark:text-blue-400 hover:underline">here</a>.</>
+          )}
+        </p>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };
 
 export default RedirectHandler;
