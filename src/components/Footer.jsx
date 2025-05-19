@@ -23,7 +23,7 @@ const Footer = () => {
             </a>
             
             <a 
-              href="https://linkedin.com/in/adeyemialadesuyi" 
+              href="https://www.linkedin.com/in/adeyemi-aladesuyi-426a9b244/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-[#0077B5] dark:text-gray-400 dark:hover:text-[#0077B5] transition-colors duration-300"
