@@ -5,6 +5,11 @@ const API_BASE_URL = import.meta.env.PROD
   ? 'https://url-shortener-na4u.onrender.com/api'
   : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
+// Frontend URL for the deployed application
+const FRONTEND_URL = import.meta.env.PROD
+  ? 'https://url-shortener-frontend-3jic.onrender.com'
+  : import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+
 // API service for URL shortener
 const api = {
   /**

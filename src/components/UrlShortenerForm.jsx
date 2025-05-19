@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 
+// Get the backend URL for shortened links
+const BACKEND_URL = 'https://url-shortener-na4u.onrender.com';
+
 const UrlShortenerForm = () => {
   const [url, setUrl] = useState('');
   const [shortUrl, setShortUrl] = useState(null);
@@ -37,11 +40,9 @@ const UrlShortenerForm = () => {
 
   const copyToClipboard = () => {
     if (shortUrl) {
-      // Make sure we're using the complete URL from the backend
+      // Always use the backend URL for shortened links
       // This ensures users get the correct URL that will work for redirection
-      const fullShortUrl = shortUrl.shortUrl.includes('http') 
-        ? shortUrl.shortUrl 
-        : `https://url-shortener-na4u.onrender.com/${shortUrl.shortCode}`;
+      const fullShortUrl = `${BACKEND_URL}/${shortUrl.shortCode}`;
       
       navigator.clipboard.writeText(fullShortUrl);
       setCopied(true);
@@ -117,9 +118,7 @@ const UrlShortenerForm = () => {
             <input
               type="text"
               readOnly
-              value={shortUrl.shortUrl.includes('http') 
-                ? shortUrl.shortUrl 
-                : `https://url-shortener-na4u.onrender.com/${shortUrl.shortCode}`}
+              value={`${BACKEND_URL}/${shortUrl.shortCode}`}
               className="flex-1 p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-l-lg focus:outline-none text-gray-900 dark:text-gray-100"
             />
             <button
