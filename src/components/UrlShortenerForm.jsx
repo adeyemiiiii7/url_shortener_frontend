@@ -153,11 +153,11 @@ const UrlShortenerForm = () => {
           </div>
           
           {/* Debug information (can be removed in production) */}
-          <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-lg">
+          {/* <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-lg">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Debug Info:</p>
             <p className="text-gray-700 dark:text-gray-300 text-xs">Short code: {shortUrl.shortCode}</p>
             <p className="text-gray-700 dark:text-gray-300 text-xs">Full URL: {api.getFullShortUrl(shortUrl.shortCode)}</p>
-          </div>
+          </div> */}
         </div>
       )}
     </div>
