@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/api';
 
-// Get the backend URL for shortened links
-const BACKEND_URL = 'https://url-shortener-na4u.onrender.com';
-
 const UrlShortenerForm = () => {
   const [url, setUrl] = useState('');
   const [shortUrl, setShortUrl] = useState(null);
@@ -19,6 +16,12 @@ const UrlShortenerForm = () => {
       return;
     }
 
+    // Basic URL validation
+    if (!url.match(/^(http|https):\/\/[^ "]+$/)) {
+      setError('Please enter a valid URL starting with http:// or https://');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -27,11 +30,13 @@ const UrlShortenerForm = () => {
       const result = await api.shortenUrl(url);
 
       if (result.success) {
+        console.log('Successfully shortened URL:', result);
         setShortUrl(result);
       } else {
         setError(result.message || 'Failed to shorten URL');
       }
     } catch (err) {
+      console.error('Error in form submission:', err);
       setError(err.response?.data?.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -40,9 +45,8 @@ const UrlShortenerForm = () => {
 
   const copyToClipboard = () => {
     if (shortUrl) {
-      // Always use the backend URL for shortened links
-      // This ensures users get the correct URL that will work for redirection
-      const fullShortUrl = `${BACKEND_URL}/${shortUrl.shortCode}`;
+      // Generate the full short URL
+      const fullShortUrl = api.getFullShortUrl(shortUrl.shortCode);
       
       navigator.clipboard.writeText(fullShortUrl);
       setCopied(true);
@@ -118,7 +122,7 @@ const UrlShortenerForm = () => {
             <input
               type="text"
               readOnly
-              value={`${BACKEND_URL}/${shortUrl.shortCode}`}
+              value={api.getFullShortUrl(shortUrl.shortCode)}
               className="flex-1 p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-l-lg focus:outline-none text-gray-900 dark:text-gray-100"
             />
             <button
@@ -146,6 +150,13 @@ const UrlShortenerForm = () => {
           <div className="mt-4 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Original URL:</p>
             <p className="text-gray-700 dark:text-gray-300 break-all text-sm">{shortUrl.originalUrl}</p>
+          </div>
+          
+          {/* Debug information (can be removed in production) */}
+          <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Debug Info:</p>
+            <p className="text-gray-700 dark:text-gray-300 text-xs">Short code: {shortUrl.shortCode}</p>
+            <p className="text-gray-700 dark:text-gray-300 text-xs">Full URL: {api.getFullShortUrl(shortUrl.shortCode)}</p>
           </div>
         </div>
       )}

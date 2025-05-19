@@ -1,11 +1,19 @@
 import axios from 'axios';
 
-// Base URL for API - updated based on environment
+// Determine the base URL based on environment
 const API_BASE_URL = import.meta.env.PROD
   ? 'https://url-shortener-na4u.onrender.com/api'
   : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
-// Configure axios with better error handling
+// The full base URL for shortened links
+const SHORTENER_BASE_URL = import.meta.env.PROD
+  ? 'https://url-shortener-na4u.onrender.com'
+  : 'http://localhost:3000';
+
+console.log('Using API base URL:', API_BASE_URL);
+console.log('Using shortener base URL:', SHORTENER_BASE_URL);
+
+// Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -14,16 +22,30 @@ const apiClient = axios.create({
   }
 });
 
-// Add response interceptor for clearer error messages
-apiClient.interceptors.response.use(
-  (response) => response,
+// Add interceptors for better error handling
+apiClient.interceptors.request.use(
+  (config) => {
+    console.log(`🔄 Making ${config.method?.toUpperCase()} request to ${config.baseURL}${config.url}`);
+    return config;
+  },
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    console.error('⚠️ Request error:', error);
     return Promise.reject(error);
   }
 );
 
-// API service for URL shortener
+apiClient.interceptors.response.use(
+  (response) => {
+    console.log(`✅ Response from ${response.config.url}:`, response.data);
+    return response;
+  },
+  (error) => {
+    console.error('❌ Response error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
+// API service
 const api = {
   /**
    * Shorten a URL
@@ -32,12 +54,11 @@ const api = {
    */
   shortenUrl: async (url) => {
     try {
-      console.log(`Attempting to shorten URL: ${url}`);
+      console.log(`📝 Attempting to shorten URL: ${url}`);
       const response = await apiClient.post('/shorten', {
         originalUrl: url
       });
       
-      console.log('Shorten URL response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error shortening URL:', error);
@@ -67,14 +88,22 @@ const api = {
    */
   getUrlByShortCode: async (shortCode) => {
     try {
-      console.log(`Fetching original URL for short code: ${shortCode}`);
+      console.log(`🔍 Fetching original URL for short code: ${shortCode}`);
       const response = await apiClient.get(`/url/${shortCode}`);
-      console.log('Get URL response:', response.data);
       return response.data;
     } catch (error) {
       console.error(`Error getting original URL for ${shortCode}:`, error.response?.data || error.message);
       throw error;
     }
+  },
+  
+  /**
+   * Get the full shortened URL
+   * @param {string} shortCode - The short code
+   * @returns {string} - The full shortened URL
+   */
+  getFullShortUrl: (shortCode) => {
+    return `${SHORTENER_BASE_URL}/${shortCode}`;
   }
 };
 
