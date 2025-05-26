@@ -11,13 +11,13 @@ const RedirectHandler = () => {
   useEffect(() => {
     const fetchOriginalUrl = async () => {
       try {
-        console.log(`Fetching redirect for short code: ${shortCode}`);
+        // console.log(`Fetching redirect for short code: ${shortCode}`);
         
-        // Try to get the original URL from the API
+        // Simulate API call to get the original URL by short code
         const result = await api.getUrlByShortCode(shortCode);
         
         if (result && result.originalUrl) {
-          console.log(`Redirecting to: ${result.originalUrl}`);
+          // console.log(`Redirecting to: ${result.originalUrl}`);
           setOriginalUrl(result.originalUrl);
         } else {
           throw new Error('Could not find original URL');
@@ -35,7 +35,7 @@ const RedirectHandler = () => {
     }
   }, [shortCode]);
 
-  // If we have the original URL, redirect to it
+
   useEffect(() => {
     if (originalUrl) {
       window.location.href = originalUrl;
@@ -76,7 +76,7 @@ const RedirectHandler = () => {
     );
   }
 
-  // Show a loading state while redirect happens
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
       <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">

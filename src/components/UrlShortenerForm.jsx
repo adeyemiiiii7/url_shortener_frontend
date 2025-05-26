@@ -30,7 +30,7 @@ const UrlShortenerForm = () => {
       const result = await api.shortenUrl(url);
 
       if (result.success) {
-        console.log('Successfully shortened URL:', result);
+        // console.log('Successfully shortened URL:', result);
         setShortUrl(result);
       } else {
         setError(result.message || 'Failed to shorten URL');

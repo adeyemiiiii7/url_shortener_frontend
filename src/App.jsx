@@ -12,7 +12,6 @@ function App() {
         <Header />
         
         <Routes>
-          {/* Home page with URL shortener form */}
           <Route path="/" element={
             <main className="flex-grow flex items-center justify-center w-full py-12 px-4 sm:px-6 lg:px-8">
               <div className="w-full max-w-2xl mx-auto">
@@ -29,8 +28,6 @@ function App() {
               </div>
             </main>
           } />
-
-          {/* Redirect handler for shortened URLs */}
           <Route path="/:shortCode" element={<RedirectHandler />} />
         </Routes>
         

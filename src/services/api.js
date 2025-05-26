@@ -10,9 +10,6 @@ const SHORTENER_BASE_URL = import.meta.env.PROD
   ? 'https://url-shortener-na4u.onrender.com'
   : 'http://localhost:3000';
 
-console.log('Using API base URL:', API_BASE_URL);
-console.log('Using shortener base URL:', SHORTENER_BASE_URL);
-
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -22,10 +19,10 @@ const apiClient = axios.create({
   }
 });
 
-// Add interceptors for better error handling
+// Add request and response interceptors for logging
 apiClient.interceptors.request.use(
   (config) => {
-    console.log(`🔄 Making ${config.method?.toUpperCase()} request to ${config.baseURL}${config.url}`);
+    // console.log(`🔄 Making ${config.method?.toUpperCase()} request to ${config.baseURL}${config.url}`);
     return config;
   },
   (error) => {
@@ -36,7 +33,7 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response from ${response.config.url}:`, response.data);
+    // console.log(`✅ Response from ${response.config.url}:`, response.data);
     return response;
   },
   (error) => {
@@ -54,7 +51,7 @@ const api = {
    */
   shortenUrl: async (url) => {
     try {
-      console.log(`📝 Attempting to shorten URL: ${url}`);
+      // console.log(`📝 Attempting to shorten URL: ${url}`);
       const response = await apiClient.post('/shorten', {
         originalUrl: url
       });
@@ -88,7 +85,7 @@ const api = {
    */
   getUrlByShortCode: async (shortCode) => {
     try {
-      console.log(`🔍 Fetching original URL for short code: ${shortCode}`);
+      // console.log(`🔍 Fetching original URL for short code: ${shortCode}`);
       const response = await apiClient.get(`/url/${shortCode}`);
       return response.data;
     } catch (error) {
